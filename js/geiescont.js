@@ -13,7 +13,7 @@
 */
 function contFact(n) {
   if (n === 0 || n === 1) return function(c) { return c(1); };
-  return bindCont(unitCont(contFact(n-1)), function(y) { 
+  return bindCont(contFact(n-1), function(y) { 
     return unitCont(n*y);
   });
 }
@@ -25,30 +25,38 @@ function contFact(n) {
             >>= (\z -> return 3+z) 
             >>= (\k -> return 2^k)
 */
-function compose1(x) {
+function compose1(x) { // chainable!
   'use strict'
-  
+
   return cont.unit(x)
            .bind(function(y) {
-             return cont.unit(3 * y);
-           })
-           .bind(function(z) {
-             return cont.unit(3 + z);
-           })
-           .bind(function(k) {
-             return cont.unit(2 ^ k);
+             return cont.unit(3 * y)
+                      .bind(function(z) {
+                        return cont.unit(3 + z)
+                                 .bind(function(k) {
+                                   return cont.unit(Math.pow(2, k));
+                                 })
+                      })
            });
 }
 
-// x -> 3x
+// cont(x -> 3x)
 function compose2(x) {
   return bindCont(unitCont(x), 
-                  function(y) { return unitCont(3*y); })
+                  function(y) { return unitCont(3*y); });
 }
 
-// x -> 3 + 3x
+// cont(x -> 3 + 3x)
 function compose3(x) {
   return bindCont(bindCont(unitCont(x), 
                            function(y) { return unitCont(3*y); }),
-                  function(z) { return unitCont(z+3); })
+                  function(z) { return unitCont(z+3); });
+}
+
+// cont(\x -> 2^(3 + 3x))
+function compose4(x) {
+  return bindCont(bindCont(bindCont(unitCont(x), 
+                           function(y) { return unitCont(3*y); }),
+                  function(z) { return unitCont(z+3); }),
+          function(k) { return unitCont(Math.pow(2,k)); });
 }

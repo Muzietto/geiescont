@@ -8,22 +8,7 @@
 	The GNU GENERAL PUBLIC LICENSE - Copyright (c) 2015 Geiescont Project
 */
 
-function id(x) { return x; }
-
-function unitCont(value) {
-  return function(f) {
-    return f(value);
-  }
-}
-
-function bindCont(conta, facrb) {
-  return unitCont(function(c) {
-    return conta(function(a) {
-      return facrb(a)(c);
-    });
-  });
-}
-
+// chainable implementation
 var cont = (function() {
   'use strict';
   
@@ -33,11 +18,11 @@ var cont = (function() {
     }
 
     monad.bind = function (facrb) {
-      return unit(function(c) {
+      return function(c) {
         return monad(function(a) {
           return facrb(a)(c);
         });
-      });
+      };
     }
     return monad;
   }
@@ -47,3 +32,20 @@ var cont = (function() {
   }
 }());
 
+// non-chainable implementation
+function unitCont(value) {
+  return function(f) {
+    return f(value);
+  }
+}
+
+function bindCont(conta, facrb) {
+  return function(c) {
+    return conta(function(a) {
+      return facrb(a)(c);
+    });
+  };
+}
+
+// helper function
+function id(x) { return x; }

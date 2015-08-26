@@ -10,31 +10,43 @@
 
 var expect = chai.expect;
 
-describe('\\x -> 2^(3 + 3x)', function () {
-  it.skip('gives 1 when x = -1', function() {
-    expect(compose1(-1)).to.be.equal(1);
+describe('\\x -> 2^(3 + 3x) - chained', function () {
+  it('gives 1 when x = -1', function() {
+    expect(compose1(-1)(id)).to.be.equal(1);
   });
-  it.skip('gives 8 when x = 0', function() {
-    expect(compose1(0)).to.be.equal(8);
+  it('gives 8 when x = 0', function() {
+    expect(compose1(0)(id)).to.be.equal(8);
   });
-  it.skip('gives 64 when x = 1', function() {
-    expect(compose1(1)).to.be.equal(64);
+  it('gives 64 when x = 1', function() {
+    expect(compose1(1)(id)).to.be.equal(64);
   });
 });
 
-describe.skip('\\x -> 3x', function () {
+describe('\\x -> 2^(3 + 3x) - not chained', function () {
+  it('gives 1 when x = -1', function() {
+    expect(compose4(-1)(id)).to.be.equal(1);
+  });
+  it('gives 8 when x = 0', function() {
+    expect(compose4(0)(id)).to.be.equal(8);
+  });
+  it('gives 64 when x = 1', function() {
+    expect(compose4(1)(id)).to.be.equal(64);
+  });
+});
+
+describe('\\x -> 3x - not chained', function () {
   it('gives 3 when x = 1', function() {
-    expect(compose2(1)/*(id)(id)*/).to.be.equal(3); // why (id)(id) ??
+    expect(compose2(1)(id)).to.be.equal(3);
   });
 });
 
-describe.skip('\\x -> 3 + 3x', function () {
+describe('\\x -> 3 + 3x - not chained', function () {
   it('gives 6 when x = 1', function() {
-    expect(compose3(1)/*(id)(id)*/).to.be.equal(6); // not working...
+    expect(compose3(1)(id)).to.be.equal(6);
   });
 });
 
-describe('Cont(fact(n))', function() {
+describe('Cont(fact(n)) - not chained', function() {
   it('continues to 1 when x=0', function() {
     expect(contFact(0)(id)).to.be.equal(1);
   });
